@@ -6,6 +6,7 @@ import {
   getDeviceInfoBatch,
   listDevices,
 } from "./main/features/devices/adb.service";
+import { getDb } from "./main/db";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -39,6 +40,7 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
+  getDb();
   startWatcher(mainWindow);
 };
 
