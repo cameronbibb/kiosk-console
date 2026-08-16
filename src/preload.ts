@@ -16,6 +16,8 @@ const api: KioskApi = {
       ipcRenderer.on("devices:changed", handler);
       return () => ipcRenderer.removeListener("devices:changed", handler);
     },
+    adopt: (serial: string, model: string | null) =>
+      ipcRenderer.invoke("devices:adopt", serial, model),
   },
 };
 

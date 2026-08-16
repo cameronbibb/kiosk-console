@@ -1,22 +1,32 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
-import { startWatcher, stopWatcher } from "./main/features/devices/watcher";
 import {
-  getDeviceInfoBatch,
-  listDevices,
-} from "./main/features/devices/adb.service";
+  refreshFleet,
+  startWatcher,
+  stopWatcher,
+} from "./main/features/devices/watcher";
+import { getDeviceInfoBatch } from "./main/features/devices/adb.service";
 import { getDb } from "./main/db";
+import { getFleet } from "./main/features/devices/devices.services";
+import { deviceRepo } from "./main/features/devices/devices.repo";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
 }
 
-ipcMain.handle("devices:list", async () => listDevices());
+ipcMain.handle("devices:list", async () => getFleet());
 ipcMain.handle("devices:detail", async (_e, serials: string[]) => {
   return getDeviceInfoBatch(serials);
 });
+ipcMain.handle(
+  "devices:adopt",
+  async (_e, serial: string, model: string | null) => {
+    await deviceRepo.adopt(serial, model);
+    await refreshFleet();
+  },
+);
 
 const createWindow = () => {
   // Create the browser window.

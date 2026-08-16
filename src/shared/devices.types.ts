@@ -30,3 +30,20 @@ export interface DeviceDetail {
   policy: DevicePolicyInfo;
   lockdown: ReturnType<typeof checkLockdown>;
 }
+
+export type DeviceStatus = "active" | "broken" | "spare" | "retired";
+
+export interface DeviceRecord {
+  serial: string;
+  label: string | null;
+  model: string | null;
+  status: DeviceStatus;
+  provisionedAt: string | null;
+  lastSeenAt: string | null;
+}
+
+export interface FleetDevice {
+  serial: string;
+  record: DeviceRecord | null; // null = not adopted
+  live: LiveDevice | null; // null = not plugged in
+}
