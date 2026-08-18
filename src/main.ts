@@ -1,32 +1,15 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
-import {
-  refreshFleet,
-  startWatcher,
-  stopWatcher,
-} from "./main/features/devices/watcher";
-import { getDeviceInfoBatch } from "./main/features/devices/adb.service";
+import { startWatcher, stopWatcher } from "./main/features/devices/watcher";
 import { getDb } from "./main/db";
-import { getFleet } from "./main/features/devices/devices.services";
-import { deviceRepo } from "./main/features/devices/devices.repo";
+import { registerClientIpc } from "./main/features/clients/ipc";
+import { registerDeviceIpc } from "./main/features/devices/ipc";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
 }
-
-ipcMain.handle("devices:list", async () => getFleet());
-ipcMain.handle("devices:detail", async (_e, serials: string[]) => {
-  return getDeviceInfoBatch(serials);
-});
-ipcMain.handle(
-  "devices:adopt",
-  async (_e, serial: string, model: string | null) => {
-    await deviceRepo.adopt(serial, model);
-    await refreshFleet();
-  },
-);
 
 const createWindow = () => {
   // Create the browser window.
@@ -50,14 +33,18 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
-  getDb();
   startWatcher(mainWindow);
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+app.on("ready", () => {
+  getDb();
+  registerClientIpc();
+  registerDeviceIpc();
+  createWindow();
+});
 
 app.on("will-quit", stopWatcher);
 

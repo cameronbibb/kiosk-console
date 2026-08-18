@@ -19,6 +19,15 @@ const api: KioskApi = {
     adopt: (serial: string, model: string | null) =>
       ipcRenderer.invoke("devices:adopt", serial, model),
   },
+  clients: {
+    list: (includeInactive) =>
+      ipcRenderer.invoke("clients:list", includeInactive),
+    findByInitials: (initials) =>
+      ipcRenderer.invoke("clients:findByInitials", initials),
+    create: (input) => ipcRenderer.invoke("clients:create", input),
+    update: (id, input) => ipcRenderer.invoke("clients:update", id, input),
+    deactivate: (id) => ipcRenderer.invoke("clients:deactivate", id),
+  },
 };
 
 contextBridge.exposeInMainWorld("api", api);

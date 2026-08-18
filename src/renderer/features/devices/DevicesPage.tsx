@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { DeviceDetail, FleetDevice, LiveDevice } from "./shared/devices.types";
-import { DeviceCard } from "./renderer/features/devices/DeviceCard";
-import "./renderer/features/devices/devices.css";
+import type { FleetDevice, DeviceDetail } from "../../../shared/devices.types";
+import { DeviceCard } from "./DeviceCard";
 
-export default function App() {
+export function DevicesPage() {
   const [fleet, setFleet] = useState<FleetDevice[]>([]);
   const [details, setDetails] = useState<Record<string, DeviceDetail>>({});
 
@@ -25,14 +24,21 @@ export default function App() {
     window.api.devices.detail(connected).then(setDetails);
   }, [connectedKey]);
 
+  const connectedCount = fleet.filter((f) => f.live).length;
+
   return (
-    <div className="app">
-      <h1>Kiosk Console</h1>
+    <>
+      <header className="page-head">
+        <h2>Devices</h2>
+        <span className="page-sub">
+          {connectedCount} connected · {fleet.length - connectedCount} absent
+        </span>
+      </header>
       <div className="grid">
         {fleet.map((f) => (
           <DeviceCard key={f.serial} fleet={f} detail={details[f.serial]} />
         ))}
       </div>
-    </div>
+    </>
   );
 }
