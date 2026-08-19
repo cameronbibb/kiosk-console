@@ -1,0 +1,1 @@
+ALTER TABLE device_assignments ADD COLUMN notes TEXT;

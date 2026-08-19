@@ -70,3 +70,83 @@ body {
   font-size: 13px;
   color: #7d828e;
 }
+
+.btn {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  background: #22262e;
+  color: #d4d7de;
+  border: 1px solid #333944;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn:hover {
+  background: #2a2f38;
+}
+.btn.ghost {
+  background: none;
+  border-color: transparent;
+  color: #9aa0ad;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.page-head .btn {
+  margin-left: auto;
+}
+
+.empty {
+  color: #7d828e;
+  font-size: 14px;
+}
+
+.client-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  background: #16181d;
+  border: 1px solid #262a33;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+.client-form input {
+  padding: 6px 10px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #0e1014;
+  color: #d4d7de;
+  border: 1px solid #333944;
+  border-radius: 6px;
+}
+.form-warning {
+  width: 100%;
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #d99f3c;
+}
+
+.client-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.client-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid #1e222a;
+}
+.client-initials {
+  font-weight: 500;
+  min-width: 48px;
+}
+.client-room {
+  color: #7d828e;
+  font-size: 13px;
+}

@@ -1,4 +1,5 @@
 import { checkLockdown } from "src/main/features/devices/lockdown";
+import { ClientRecord } from "./clients.types";
 
 export type ConnectionState =
   "device" | "unauthorized" | "offline" | "recovery";
@@ -31,7 +32,7 @@ export interface DeviceDetail {
   lockdown: ReturnType<typeof checkLockdown>;
 }
 
-export type DeviceStatus = "active" | "broken" | "spare" | "retired";
+export type DeviceStatus = "active" | "broken" | "lost" | "released" | "spare";
 
 export interface DeviceRecord {
   serial: string;
@@ -46,4 +47,5 @@ export interface FleetDevice {
   serial: string;
   record: DeviceRecord | null; // null = not adopted
   live: LiveDevice | null; // null = not plugged in
+  client: ClientRecord | null;
 }

@@ -12,3 +12,16 @@ export interface ClientInput {
   room: string | null;
   intakeAt: string | null;
 }
+
+export type EndReason = "released" | "returned" | "broken" | "lost";
+
+export interface AssignmentRecord {
+  id: string;
+  clientId: string;
+  deviceSerial: string;
+  assignedAt: string;
+  returnedAt: string | null;
+  endReason: EndReason | null;
+  notes: string | null;
+  performedBy: string | null;
+}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { DevicesPage } from "./features/devices/DevicesPage";
+import { ClientsPage } from "./features/clients/ClientsPage";
 import "./features/devices/devices.css";
 import "./app.css";
 
@@ -29,7 +30,7 @@ export default function App() {
       </nav>
       <main className="content">
         {section === "devices" && <DevicesPage />}
-        {section === "clients" && <div>Clients coming next</div>}
+        {section === "clients" && <ClientsPage />}
       </main>
     </div>
   );

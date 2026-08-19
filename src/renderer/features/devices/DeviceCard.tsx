@@ -1,7 +1,10 @@
 import type { FleetDevice, DeviceDetail } from "../../../shared/devices.types";
+import { useState } from "react";
+import { AssignPicker } from "./AssignPicker";
+import { UnassignPicker } from "./UnassignPicker";
 
 interface Props {
-  device: FleetDevice;
+  fleet: FleetDevice;
   detail?: DeviceDetail;
 }
 
@@ -23,7 +26,12 @@ function relativeTime(iso: string | null): string {
 }
 
 export function DeviceCard({ fleet, detail }: Props) {
-  const { serial, record, live } = fleet;
+  const { serial, record, live, client } = fleet;
+  const [mode, setMode] = useState<"idle" | "assign" | "unassign">("idle");
+
+  const title = client
+    ? `${client.initials}${client.room ? ` · ${client.room}` : ""}`
+    : "Unassigned";
 
   // Not adopted
   if (!record) {
@@ -53,7 +61,7 @@ export function DeviceCard({ fleet, detail }: Props) {
       <article className="card" data-status="absent">
         <header className="card-head">
           <div>
-            <h3 className="card-title">{record.label ?? "Unassigned"}</h3>
+            <h3 className="card-title">{title}</h3>
             <p className="card-serial">{serial}</p>
           </div>
           <span className="pill">Not plugged in</span>
@@ -76,7 +84,7 @@ export function DeviceCard({ fleet, detail }: Props) {
     <article className="card" data-status={status}>
       <header className="card-head">
         <div>
-          <h3 className="card-title">{record.label ?? "Unassigned"}</h3>
+          <h3 className="card-title">{title}</h3>
           <p className="card-serial">{serial}</p>
         </div>
         <span className="pill">
@@ -109,6 +117,29 @@ export function DeviceCard({ fleet, detail }: Props) {
               <dd>{lockdown?.kioskEnabled ? "Locked" : "Unlocked"}</dd>
             </div>
           </dl>
+
+          {mode === "assign" && (
+            <AssignPicker serial={serial} onDone={() => setMode("idle")} />
+          )}
+          {mode === "unassign" && (
+            <UnassignPicker serial={serial} onDone={() => setMode("idle")} />
+          )}
+          {mode === "idle" && (
+            <div className="card-footer">
+              {client ? (
+                <button
+                  className="btn ghost"
+                  onClick={() => setMode("unassign")}
+                >
+                  Unassign
+                </button>
+              ) : (
+                <button className="btn ghost" onClick={() => setMode("assign")}>
+                  Assign client
+                </button>
+              )}
+            </div>
+          )}
 
           {lockdown &&
             !lockdown.kioskEnabled &&

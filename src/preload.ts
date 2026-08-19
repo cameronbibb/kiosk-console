@@ -18,6 +18,11 @@ const api: KioskApi = {
     },
     adopt: (serial: string, model: string | null) =>
       ipcRenderer.invoke("devices:adopt", serial, model),
+    assign: (serial, clientId) =>
+      ipcRenderer.invoke("devices:assign", serial, clientId),
+    unassign: (serial, reason, notes) =>
+      ipcRenderer.invoke("devices:unassign", serial, reason, notes),
+    history: (serial) => ipcRenderer.invoke("devices:history", serial),
   },
   clients: {
     list: (includeInactive) =>
