@@ -5,6 +5,7 @@ import { startWatcher, stopWatcher } from "./main/features/devices/watcher";
 import { getDb } from "./main/db";
 import { registerClientIpc } from "./main/features/clients/ipc";
 import { registerDeviceIpc } from "./main/features/devices/ipc";
+import { sendKioskCommand } from "@main/features/devices/adb.service";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
