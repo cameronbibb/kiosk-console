@@ -1,11 +1,11 @@
 import { randomUUID } from "node:crypto";
 import os from "node:os";
-import { getDb } from "../../db";
+import { getDb } from "@main/db";
 import type {
   AssignmentRecord,
   EndReason,
-} from "../../../shared/clients.types";
-import type { DeviceStatus } from "../../../shared/devices.types";
+} from "@shared/clients.types";
+import type { DeviceStatus } from "@shared/devices.types";
 
 interface AssignmentRow {
   id: string;

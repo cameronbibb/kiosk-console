@@ -1,5 +1,5 @@
-import { getDb } from "../../db";
-import type { DeviceRecord, DeviceStatus } from "../../../shared/devices.types";
+import { getDb } from "@main/db";
+import type { DeviceRecord, DeviceStatus } from "@shared/devices.types";
 
 interface DeviceRow {
   serial: string;

@@ -1,8 +1,8 @@
 import { listDevices } from "./adb.service";
 import { deviceRepo } from "./devices.repo";
 import { assignmentRepo } from "./assignments.repo";
-import { clientRepo } from "../clients/clients.repo";
-import type { FleetDevice } from "../../../shared/devices.types";
+import { clientRepo } from "@main/features/clients/clients.repo";
+import type { FleetDevice } from "@shared/devices.types";
 
 export async function getFleet(): Promise<FleetDevice[]> {
   const [live, known, openAssignments, clients] = await Promise.all([

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { FleetDevice, DeviceDetail } from "../../../shared/devices.types";
+import type { FleetDevice, DeviceDetail } from "@shared/devices.types";
 import { DeviceCard } from "./DeviceCard";
 
 export function DevicesPage() {

@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { getDb } from "../../db";
-import type { ClientRecord, ClientInput } from "../../../shared/clients.types";
+import { getDb } from "@main/db";
+import type { ClientRecord, ClientInput } from "@shared/clients.types";
 
 interface ClientRow {
   id: string;

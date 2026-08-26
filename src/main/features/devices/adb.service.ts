@@ -2,7 +2,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { parseDeviceLine, parseBattery, parseDevicePolicy } from "./parsers";
 import { checkLockdown } from "./lockdown";
-import { LiveDevice, DeviceDetail } from "@shared/devices.types";
+import type { LiveDevice, DeviceDetail } from "@shared/devices.types";
 
 const execFileAsync = promisify(execFile);
 

@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
 import { clientRepo } from "./clients.repo";
-import type { ClientInput } from "../../../shared/clients.types";
+import type { ClientInput } from "@shared/clients.types";
 
 export function registerClientIpc() {
   ipcMain.handle("clients:list", async (_e, includeInactive?: boolean) =>

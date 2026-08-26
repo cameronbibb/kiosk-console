@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { ClientRecord } from "../../../shared/clients.types";
+import type { ClientRecord } from "@shared/clients.types";
 
 interface Props {
   serial: string;

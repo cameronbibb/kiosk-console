@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { EndReason } from "../../../shared/clients.types";
+import type { EndReason } from "@shared/clients.types";
 
 const REASONS: { value: EndReason; label: string; hint?: string }[] = [
   { value: "returned", label: "Returned to inventory" },

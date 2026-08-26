@@ -1,4 +1,4 @@
-import type { FleetDevice, DeviceDetail } from "../../../shared/devices.types";
+import type { FleetDevice, DeviceDetail } from "@shared/devices.types";
 import { useState } from "react";
 import { AssignPicker } from "./AssignPicker";
 import { UnassignPicker } from "./UnassignPicker";
