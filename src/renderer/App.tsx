@@ -17,7 +17,7 @@ export default function App() {
   return (
     <div className="shell">
       <nav className="sidebar">
-        <div className="brand">Kiosk Console</div>
+        <div className="brand">MP3 Fleet Dashboard</div>
         {SECTIONS.map((s) => (
           <button
             key={s.id}

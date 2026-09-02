@@ -14,7 +14,7 @@ body {
 }
 
 .sidebar {
-  width: 180px;
+  width: 200px;
   flex-shrink: 0;
   background: #121419;
   border-right: 1px solid #1e222a;
@@ -149,4 +149,27 @@ body {
 .client-room {
   color: #7d828e;
   font-size: 13px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2f38;
+  border-radius: 5px;
+  border: 2px solid #0e1014; /* matches page bg, insets the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a4049;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }

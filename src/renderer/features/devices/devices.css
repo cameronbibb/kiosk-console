@@ -1,13 +1,38 @@
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .card {
-  --status: #6b7280;
+  position: relative;
   background: #16181d;
-  border: 1px solid #262a33;
-  border-left: 3px solid var(--status);
+  border: 1px solid transparent;
   border-radius: 8px;
   padding: 14px 16px;
-  color: #d4d7de;
-  font-family: system-ui, sans-serif;
+  background-clip: padding-box;
 }
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    145deg,
+    var(--status) 0%,
+    color-mix(in srgb, var(--status) 25%, #262a33) 55%,
+    #262a33 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
 .card[data-status="ok"] {
   --status: #3fa662;
 }
@@ -93,4 +118,42 @@
   margin-top: 12px;
   padding-top: 12px;
   border-top: 1px solid #262a33;
+}
+.batch-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.task-block {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #262a33;
+}
+.task-label {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #9aa0ad;
+}
+.progress {
+  height: 4px;
+  border-radius: 2px;
+  background: #0e1014;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: #5b8dd9;
+  transition: width 200ms ease;
+}
+.task-error {
+  width: 100%;
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #d4544e;
+}
+.card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
