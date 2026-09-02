@@ -5,6 +5,7 @@ import type {
   EndReason,
   AssignmentRecord,
 } from "./clients.types";
+import { TaskKind, TaskProgress } from "./tasks.types";
 
 export type Unsubscribe = () => void;
 
@@ -20,6 +21,10 @@ export interface DeviceApi {
     notes: string | null,
   ): Promise<void>;
   history(serial: string): Promise<AssignmentRecord[]>;
+  runTask(serial: string, kind: TaskKind): Promise<string>;
+  cancelTask(id: string): Promise<void>;
+  activeTasks(): Promise<TaskProgress[]>;
+  onTaskProgress(cb: (p: TaskProgress) => void): Unsubscribe;
 }
 
 export interface ClientApi {

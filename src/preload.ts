@@ -4,6 +4,7 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from "electron";
 import type { KioskApi } from "./shared/api";
 import type { LiveDevice } from "./shared/devices.types";
+import { TaskProgress } from "@shared/tasks.types";
 
 const api: KioskApi = {
   devices: {
@@ -23,6 +24,15 @@ const api: KioskApi = {
     unassign: (serial, reason, notes) =>
       ipcRenderer.invoke("devices:unassign", serial, reason, notes),
     history: (serial) => ipcRenderer.invoke("devices:history", serial),
+    runTask: (serial, kind) =>
+      ipcRenderer.invoke("devices:runTask", serial, kind),
+    cancelTask: (id) => ipcRenderer.invoke("devices:cancelTask", id),
+    activeTasks: () => ipcRenderer.invoke("devices:activeTasks"),
+    onTaskProgress: (cb) => {
+      const handler = (_e: IpcRendererEvent, p: TaskProgress) => cb(p);
+      ipcRenderer.on("task:progress", handler);
+      return () => ipcRenderer.removeListener("task:progress", handler);
+    },
   },
   clients: {
     list: (includeInactive) =>

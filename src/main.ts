@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { app, BrowserWindow } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
@@ -6,6 +7,7 @@ import { getDb } from "./main/db";
 import { registerClientIpc } from "./main/features/clients/ipc";
 import { registerDeviceIpc } from "./main/features/devices/ipc";
 import { sendKioskCommand } from "@main/features/devices/adb.service";
+import { onTaskProgress } from "@main/features/devices/tasks";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -35,6 +37,11 @@ const createWindow = () => {
   mainWindow.webContents.openDevTools();
 
   startWatcher(mainWindow);
+  onTaskProgress((progress) => {
+    if (!mainWindow.isDestroyed()) {
+      mainWindow.webContents.send("task:progress", progress);
+    }
+  });
 };
 
 // This method will be called when Electron has finished

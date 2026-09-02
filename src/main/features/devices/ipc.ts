@@ -5,6 +5,8 @@ import { refreshFleet } from "./watcher";
 import { getDeviceInfoBatch } from "./adb.service";
 import { assignmentRepo } from "./assignments.repo";
 import { EndReason } from "src/shared/clients.types";
+import { activeTasks, cancel, enqueue } from "./tasks";
+import { TaskKind } from "@shared/tasks.types";
 
 export function registerDeviceIpc() {
   ipcMain.handle("devices:list", async () => getFleet());
@@ -37,4 +39,13 @@ export function registerDeviceIpc() {
   ipcMain.handle("devices:history", async (_e, serial: string) =>
     assignmentRepo.historyForDevice(serial),
   );
+
+  ipcMain.handle(
+    "devices:runTask",
+    async (_e, serial: string, kind: TaskKind) => enqueue(serial, kind),
+  );
+
+  ipcMain.handle("devices:cancelTask", async (_e, id: string) => cancel(id));
+
+  ipcMain.handle("devices:activeTasks", async () => activeTasks());
 }

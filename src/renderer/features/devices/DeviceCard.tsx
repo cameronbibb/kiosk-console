@@ -2,10 +2,12 @@ import type { FleetDevice, DeviceDetail } from "@shared/devices.types";
 import { useState } from "react";
 import { AssignPicker } from "./AssignPicker";
 import { UnassignPicker } from "./UnassignPicker";
+import { TaskProgress } from "@shared/tasks.types";
 
 interface Props {
   fleet: FleetDevice;
   detail?: DeviceDetail;
+  task?: TaskProgress;
 }
 
 const STATE_LABEL: Record<string, string> = {
@@ -25,7 +27,7 @@ function relativeTime(iso: string | null): string {
   return `${Math.floor(hrs / 24)}d ago`;
 }
 
-export function DeviceCard({ fleet, detail }: Props) {
+export function DeviceCard({ fleet, detail, task }: Props) {
   const { serial, record, live, client } = fleet;
   const [mode, setMode] = useState<"idle" | "assign" | "unassign">("idle");
 
@@ -124,22 +126,63 @@ export function DeviceCard({ fleet, detail }: Props) {
           {mode === "unassign" && (
             <UnassignPicker serial={serial} onDone={() => setMode("idle")} />
           )}
-          {mode === "idle" && (
-            <div className="card-footer">
-              {client ? (
+          {mode === "idle" &&
+            (task && (task.status === "running" || task.status === "queued") ? (
+              <div className="task-block">
+                <p className="task-label">
+                  {task.status === "queued"
+                    ? "Waiting…"
+                    : `${task.stepLabel} — step ${task.stepIndex + 1} of ${task.stepCount}`}
+                </p>
+                <div className="progress">
+                  <div
+                    className="progress-fill"
+                    style={{
+                      width: `${(task.stepIndex / task.stepCount) * 100}%`,
+                    }}
+                  />
+                </div>
                 <button
                   className="btn ghost"
-                  onClick={() => setMode("unassign")}
+                  onClick={() => window.api.devices.cancelTask(task.id)}
                 >
-                  Unassign
+                  Cancel
                 </button>
-              ) : (
-                <button className="btn ghost" onClick={() => setMode("assign")}>
-                  Assign client
+              </div>
+            ) : (
+              <div className="card-footer">
+                {task?.status === "failed" && (
+                  <p className="task-error">{task.error}</p>
+                )}
+                <button
+                  className="btn ghost"
+                  onClick={() => window.api.devices.runTask(serial, "lock")}
+                >
+                  Lock
                 </button>
-              )}
-            </div>
-          )}
+                <button
+                  className="btn ghost"
+                  onClick={() => window.api.devices.runTask(serial, "unlock")}
+                >
+                  Unlock
+                </button>
+                {client ? (
+                  <button
+                    className="btn ghost"
+                    onClick={() => setMode("unassign")}
+                  >
+                    Unassign
+                  </button>
+                ) : (
+                  <button
+                    className="btn ghost"
+                    onClick={() => setMode("assign")}
+                  >
+                    Assign
+                  </button>
+                )}
+              </div>
+            ))}
 
           {lockdown &&
             !lockdown.kioskEnabled &&
