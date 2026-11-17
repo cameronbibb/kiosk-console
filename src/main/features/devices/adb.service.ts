@@ -3,6 +3,7 @@ import { promisify } from "node:util";
 import { parseDeviceLine, parseBattery, parseDevicePolicy } from "./parsers";
 import { checkLockdown } from "./lockdown";
 import type { LiveDevice, DeviceDetail } from "@shared/devices.types";
+import { isDemo, demoAdb } from "@main/demo/demo";
 
 const execFileAsync = promisify(execFile);
 
@@ -10,6 +11,7 @@ const execFileAsync = promisify(execFile);
 const ADB = "adb";
 
 export async function listDevices(): Promise<LiveDevice[]> {
+  if (isDemo) return demoAdb.listDevices();
   const { stdout } = await execFileAsync(ADB, ["devices", "-l"]);
 
   return stdout
@@ -27,6 +29,7 @@ async function adb(serial: string, ...args: string[]): Promise<string> {
 }
 
 export async function getDeviceInfo(serial: string): Promise<DeviceDetail> {
+  if (isDemo) return demoAdb.getDeviceInfo(serial);
   const [batteryOut, policyOut] = await Promise.all([
     adb(serial, "shell", "dumpsys", "battery"),
     adb(serial, "shell", "dumpsys", "device_policy"),
@@ -73,6 +76,7 @@ export async function sendKioskCommand(
   action: string,
   extras: Record<string, string> = {},
 ): Promise<BroadcastResult> {
+  if (isDemo) return demoAdb.sendKioskCommand(serial, action);
   const token = process.env.KIOSK_TOKEN;
   if (!token) throw new Error("KIOSK_TOKEN is not configured");
 
