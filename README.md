@@ -4,12 +4,30 @@ A desktop app for managing a fleet of locked-down Android media players over USB
 
 Built with Electron, React, TypeScript and SQLite. It talks to devices through `adb`, and to the companion kiosk app (`com.kumh.mp3kiosk`) running on each device as its Device Owner.
 
+![Devices page showing assigned, unassigned, unregistered and unplugged devices](docs/screenshots/devices.png)
+
 ## Features
 
 - **Live device view.** Polls `adb devices` every 2 seconds and shows each connected device's connection state, battery, and lock status.
 - **Fleet adoption.** Devices are added to the fleet explicitly. Unknown serials show up as "adoptable" and nothing is written for them until someone adopts them.
 - **Lock / unlock.** Sends a command to the kiosk app, then reads the device's policy back to confirm the restrictions actually changed. Runs up to 4 devices at a time with live progress, and tasks can be cancelled.
 - **Clients and assignments.** Records which client has which device, with full history. One device can only have one open assignment at a time. Unassigning records a reason (released, returned, broken, lost) and optional notes.
+
+## Screenshots
+
+All screenshots use demo mode (`npm run start:demo`). The initials, rooms and serials are made up.
+
+**Locking several devices at once.** Each device shows its current step.
+
+![Lock all in progress on three devices](docs/screenshots/lock-progress.png)
+
+**Unassigning a device.** Staff choose a reason and can add a note.
+
+![Unassign form on a device card, with a reason menu and an optional notes field](docs/screenshots/unassign.png)
+
+**Clients.** Listed by initials and room only.
+
+![Clients page listing initials and rooms](docs/screenshots/clients.png)
 
 ## Requirements
 
@@ -40,11 +58,12 @@ The kiosk app rejects any command without the matching token. `.env` is gitignor
 
 ## Scripts
 
-| Command           | What it does                                       |
-| ----------------- | -------------------------------------------------- |
-| `npm start`       | Run the app in development                         |
-| `npm run lint`    | Lint all `.ts` / `.tsx` files                      |
-| `npm run package` | Build the app for the current platform             |
+| Command           | What it does                                         |
+| ----------------- | ---------------------------------------------------- |
+| `npm start`       | Run the app in development                           |
+| `npm run start:demo` | Run with fake devices and made-up clients on a separate database (no adb needed). Use this for screenshots. Development only: installed builds ignore it. |
+| `npm run lint`    | Lint all `.ts` / `.tsx` files                        |
+| `npm run package` | Build the app for the current platform               |
 | `npm run make`    | Build installers (Squirrel, ZIP for macOS, deb, rpm) |
 
 ## Project structure
@@ -56,7 +75,7 @@ src/
   main/
     db/                    SQLite connection, migration runner, SQL migrations
     features/
-      clients/             Client records and their IPC handlers
+      clients/             Client identifiers for device assignment, and their IPC handlers
       devices/
         adb.service.ts     adb calls and kiosk commands
         watcher.ts         Polls for connected devices and pushes fleet updates
@@ -85,7 +104,7 @@ The database is a local SQLite file stored in Electron's user data folder, **not
 
 - macOS: `~/Library/Application Support/kiosk-console/kiosk-console.db`
 
-It holds client records, so treat it as sensitive:
+It stores the minimal identifiers needed to track which client has which device (initials and room), so treat it as sensitive:
 
 - Clients are identified by **initials and room only**. Don't store full names.
 - The assignment **notes** field is free text. Keep identifying details out of it.
@@ -99,6 +118,8 @@ Migrations live in `src/main/db/migrations/` and run automatically at startup. T
 - `adb` is taken from `PATH`. Bundling the binary with the app is not done yet.
 - Lock/unlock task history is kept in memory and lost on restart. The `device_tasks` table exists but isn't written to yet.
 - No automated tests yet. The parser fixtures are ready for them.
+- There is an issue with serial numbers not being unique on some devices. A fix is to utilize another unique identifier, either MAC address or Bluetooth address.
+- Some devices report the same serial number, but the serial is used as each device's ID. Duplicates can't be told apart and would share one record. Planned fix: identify devices by Wi-Fi MAC or Bluetooth address instead.
 
 ## License
 
