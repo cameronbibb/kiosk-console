@@ -2,6 +2,8 @@
 
 A desktop app for managing a fleet of locked-down Android media players over USB. Staff use it to see which devices are plugged in, lock or unlock them in kiosk mode, and track which client each device is assigned to.
 
+For the background and design decisions behind this project, read the [case study on my portfolio](https://cameronbibb.com/work/mp3-fleet-manager/).
+
 Built with Electron, React, TypeScript and SQLite. It talks to devices through `adb`, and to the companion kiosk app (`com.kumh.mp3kiosk`) running on each device as its Device Owner.
 
 ![Devices page showing assigned, unassigned, unregistered and unplugged devices](docs/screenshots/devices.png)
